@@ -22,6 +22,7 @@
 	<bean id="osm-MapReaderFactory" class="org.mapfish.print.map.readers.OsmMapReader$Factory"/>
 	<bean id="xyz-MapReaderFactory" class="org.mapfish.print.map.readers.XyzMapReader$Factory"/>
 	<bean id="tms-MapReaderFactory" class="org.mapfish.print.map.readers.TmsMapReader$Factory"/>
+	<bean id="bing-MapReaderFactory" class="org.mapfish.print.map.readers.BingMapReader$Factory"/>
 	<bean id="vector-MapReaderFactory" class="org.mapfish.print.map.readers.VectorMapReader$Factory"/>
 	<bean id="image-MapReaderFactory" class="org.mapfish.print.map.readers.ImageMapReader$Factory"/>
 	<bean id="tiledGoogle-MapReaderFactory" class="org.mapfish.print.map.readers.google.GoogleMapTileReader$Factory"/>
@@ -29,7 +30,7 @@
 	<bean id="kaMapCache-ReaderFactory" class="org.mapfish.print.map.readers.KaMapCacheMapReader$Factory"/>
 	<bean id="kaMap-ReaderFactory" class="org.mapfish.print.map.readers.KaMapMapReader$Factory"/>
 	<bean id="wmts-ReaderFactory" class="org.mapfish.print.map.readers.WMTSMapReader$Factory"/>
-	
+
 	<!-- Define output factories -->
 	<bean id="outputFactory" class="org.mapfish.print.output.OutputFactory">
 		<property name="formatFactories">
