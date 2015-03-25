@@ -36,7 +36,7 @@
 		<property name="formatFactories">
 			<list>
 				<!-- Uncomment to use image magick for image output -->
-				<!-- <ref bean="imageMagickOutput" />  -->
+				<ref bean="imageMagickOutput" />
 				<ref bean="fileCachingJaiMosaicOutputFactory" />
 				<ref bean="inMemoryJaiMosaicOutputFactory" />
 				<ref bean="pdfOutputFactory" />
@@ -47,7 +47,7 @@
 		<!-- the path and command of the process to use for converting the pdf to another format.
 		     The normal configuration is for imagemagick  -->
 		<property name="cmd">
-			<value>/usr/local/convert</value>
+			<value>/usr/local/Cellar/imagemagick/6.8.9-8/bin/convert</value>
 		</property>
 		<!-- The arguments to use when running an imagemagick process -->
 		<property name="cmdArgs">
