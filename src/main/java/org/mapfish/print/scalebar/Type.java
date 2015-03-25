@@ -37,5 +37,10 @@ public enum Type {
      * A bar with alternating black and white zones marking the sub-intervals.
      * Intervals have small additional ticks.
      */
-    BAR_SUB
+    BAR_SUB,
+    /**
+     * A bar with alternating black and white zones marking the sub-intervals.
+     * Intervals have small additional ticks.
+     */
+    ASYMMETRIC
 }

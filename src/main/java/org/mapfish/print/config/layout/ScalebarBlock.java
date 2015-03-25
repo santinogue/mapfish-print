@@ -58,6 +58,8 @@ public class ScalebarBlock extends FontBlock {
 
     private DistanceUnit units = null;
 
+    private DistanceUnit customUnits = null;
+
     private boolean lockUnits = false;
 
     private Integer barSize = null;
@@ -76,15 +78,19 @@ public class ScalebarBlock extends FontBlock {
     private String barBgColor = null;
 
     private Double lineWidth = null;
-    
+
     private String name = null;
 
 
     public void render(PJsonObject params, PdfElement target, RenderingContext context) throws DocumentException {
         final PJsonObject globalParams = context.getGlobalParams();
         final DistanceUnit mapUnits = DistanceUnit.fromString(globalParams.getString("units"));
+        customUnits = DistanceUnit.fromString(globalParams.getString("custom_units"));
         if (mapUnits == null) {
             throw new InvalidJsonValueException(globalParams, "units", globalParams.getString("units"));
+        }
+        if (customUnits != null) {
+            units = customUnits;
         }
         DistanceUnit scaleUnit = (units != null ? units : mapUnits);
         final double scale = context.getLayout().getMainPage().getMap(name).createTransformer(context, params).getScale();
@@ -383,6 +389,6 @@ public class ScalebarBlock extends FontBlock {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
+
+
 }

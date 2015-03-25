@@ -75,6 +75,8 @@ public abstract class ScalebarDrawer extends ChunkDrawer {
                 return new BarSubScalebarDrawer(customBlocks, block, labels, barSize, labelDistance, subIntervals, intervalWidth, pdfFont, leftLabelMargin, rightLabelMargin, maxLabelWidth, maxLabelHeight);
             case LINE:
                 return new LineScalebarDrawer(customBlocks, block, labels, barSize, labelDistance, subIntervals, intervalWidth, pdfFont, leftLabelMargin, rightLabelMargin, maxLabelWidth, maxLabelHeight);
+            case ASYMMETRIC:
+                return new AsymmetricScalebarDrawer(customBlocks, block, labels, barSize, labelDistance, subIntervals, intervalWidth, pdfFont, leftLabelMargin, rightLabelMargin, maxLabelWidth, maxLabelHeight);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
@@ -171,11 +173,13 @@ public abstract class ScalebarDrawer extends ChunkDrawer {
             }
 
             if (label.paperOffset + Math.abs(offsetH) <= prevPos - 1) {
-                dc.beginText();
-                dc.showTextAligned(PdfContentByte.ALIGN_LEFT, label.label,
-                        label.paperOffset + offsetH, offsetV, (float) (block.getBarDirection().getAngle() - block.getTextDirection().getAngle()));
-                dc.endText();
-                prevPos = label.paperOffset - Math.abs(offsetH);
+                if (!label.label.toString().equals("0")) {
+                    dc.beginText();
+                    dc.showTextAligned(PdfContentByte.ALIGN_LEFT, label.label,
+                            label.paperOffset + offsetH, offsetV, (float) (block.getBarDirection().getAngle() - block.getTextDirection().getAngle()));
+                    dc.endText();
+                    prevPos = label.paperOffset - Math.abs(offsetH);
+                }
             } else {
                 //the label would be written over the previous one => ignore it
                 label.label = null;
