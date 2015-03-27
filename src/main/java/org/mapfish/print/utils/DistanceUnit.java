@@ -39,7 +39,7 @@ public enum DistanceUnit {
     CM(DistanceUnit.M, 0.01, 0.01, new String[]{"cm", "centimeter", "centimeters"}),
     KM(DistanceUnit.M, 1000.0, 1000.0, new String[]{"km", "kilometer", "kilometers"}),
 
-    FT(null, 1.0, 25.4 / 1000.0 * 12.0, new String[]{"ft", "foot", "feet"}),
+    FT(null, 1.0, 1200 / 3937, new String[]{"ft", "foot", "feet"}),
     PT(DistanceUnit.FT, 1 / 12.0 / 72.0, 25.4 / 1000.0 / 72.0, new String[]{"pt", "point"}),
     IN(DistanceUnit.FT, 1 / 12.0, 25.4 / 1000.0, new String[]{"in", "inch"}),
     YD(DistanceUnit.FT, 3.0, 25.4 / 1000.0 * 12.0 * 3.0, new String[]{"yd", "yard", "yards"}),
