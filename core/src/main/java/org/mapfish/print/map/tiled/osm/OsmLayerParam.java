@@ -194,6 +194,11 @@ public final class OsmLayerParam extends AbstractTiledLayerParams {
         }
 
         // replace placeholders with dummy values, then check if an URI can be created
+
+        if (url.contains("{quadkey}")) {
+           url = url.substring(0, url.indexOf("{quadkey}"));
+        }
+
         url = url
                 .replace("{z}", "0")
                 .replace("{x}", "0")

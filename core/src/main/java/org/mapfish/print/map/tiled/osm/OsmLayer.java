@@ -106,38 +106,65 @@ public final class OsmLayer extends AbstractTiledLayer {
                 throws IOException, URISyntaxException {
 
             final URI uri;
-            if (commonUrl.contains("{x}") && commonUrl.contains("{z}")
-                    && (commonUrl.contains("{y}") || commonUrl.contains("{-y}"))) {
-                String url = commonUrl
-                        .replace("{z}", String.format("%02d", this.resolutionIndex))
-                        .replace("{x}", Integer.toString(column))
-                        .replace("{y}", Integer.toString(row));
-                if (commonUrl.contains("{-y}")) {
-                    // {-y} is for  OSGeo TMS layers, see also: https://josm.openstreetmap.de/wiki/Maps#TileMapServicesTMS
-                    url = url.replace("{-y}", Integer.toString((int) Math.pow(2, this.resolutionIndex) - 1 - row));
-                }
-                uri  = new URI(url);
-            } else {
-                if (OsmLayer.this.param.imageFormat != null) {
-                    LOGGER.warn("The imageFormat is deprecated, " +
-                            "replaced by imageExtension should be a mime type");
-                    OsmLayer.this.param.imageExtension = OsmLayer.this.param.imageFormat;
-                }
+            if (commonUrl.contains("{quadkey}")) {
                 StringBuilder path = new StringBuilder();
-                if (!commonUrl.endsWith("/")) {
-                    path.append('/');
-                }
-                path.append(String.format("%02d", this.resolutionIndex));
-                path.append('/').append(column);
-                path.append('/').append(row);
-                path.append('.').append(OsmLayer.this.param.imageExtension);
 
-                uri  = new URI(commonUrl + path.toString());
+                String quadkey = this.tile2quad(column, row, Integer.parseInt(String.format("%02d", this.resolutionIndex)));
+                String newCommonUrl = commonUrl.substring(0, commonUrl.indexOf("{quadkey}"));
+
+                path.append(quadkey);
+                path.append('.').append(OsmLayer.this.param.imageExtension);
+                URI commonUri = new URI(newCommonUrl);
+
+                uri = new URI(commonUri.getScheme(), commonUri.getUserInfo(), commonUri.getHost(), commonUri.getPort(), commonUri.getPath() + path, "g=3299", commonUri.getFragment());
+
+            } else {
+                if (commonUrl.contains("{x}") && commonUrl.contains("{z}")
+                        && (commonUrl.contains("{y}") || commonUrl.contains("{-y}"))) {
+                    String url = commonUrl
+                            .replace("{z}", String.format("%02d", this.resolutionIndex))
+                            .replace("{x}", Integer.toString(column))
+                            .replace("{y}", Integer.toString(row));
+                    if (commonUrl.contains("{-y}")) {
+                        // {-y} is for  OSGeo TMS layers, see also: https://josm.openstreetmap.de/wiki/Maps#TileMapServicesTMS
+                        url = url.replace("{-y}", Integer.toString((int) Math.pow(2, this.resolutionIndex) - 1 - row));
+                    }
+                    uri = new URI(url);
+                } else {
+                    if (OsmLayer.this.param.imageFormat != null) {
+                        LOGGER.warn("The imageFormat is deprecated, " +
+                                "replaced by imageExtension should be a mime type");
+                        OsmLayer.this.param.imageExtension = OsmLayer.this.param.imageFormat;
+                    }
+                    StringBuilder path = new StringBuilder();
+                    if (!commonUrl.endsWith("/")) {
+                        path.append('/');
+                    }
+                    path.append(String.format("%02d", this.resolutionIndex));
+                    path.append('/').append(column);
+                    path.append('/').append(row);
+                    path.append('.').append(OsmLayer.this.param.imageExtension);
+
+                    uri = new URI(commonUrl + path.toString());
+                }
             }
 
             return httpRequestFactory.createRequest(
                     URIUtils.addParams(uri, OsmLayerParam.convertToMultiMap(OsmLayer.this.param.customParams),
                     URIUtils.getParameters(uri).keySet()), HttpMethod.GET);
+        }
+
+        //for bing maps
+        public String tile2quad(int x, int y, int z) {
+            String quad = "";
+            for (int i = z; i > 0; i--) {
+                int digit = 0;
+                int mask = 1 << (i - 1);
+                if ((x & mask) != 0) digit += 1;
+                if ((y & mask) != 0) digit += 2;
+                quad = quad + digit;
+            }
+            return quad;
         }
 
         @Override
